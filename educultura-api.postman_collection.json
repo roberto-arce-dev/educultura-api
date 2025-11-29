@@ -505,6 +505,134 @@
           }
         }
       ]
+    },
+    {
+      "name": "Curso Cultural",
+      "item": [
+        {
+          "name": "Cursos Culturales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/curso/culturales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "curso",
+                "culturales"
+              ]
+            },
+            "description": "Catálogo de cursos culturales"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Curso Cultural"
+    },
+    {
+      "name": "Inscripción",
+      "item": [
+        {
+          "name": "Mis Inscripciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inscripcion/usuario/{{usuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inscripcion",
+                "usuario",
+                "{{usuarioId}}"
+              ]
+            },
+            "description": "Cursos culturales inscritos"
+          },
+          "response": []
+        },
+        {
+          "name": "Inscribirse en Curso",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inscripcion/inscribir",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inscripcion",
+                "inscribir"
+              ]
+            },
+            "description": "Inscripción en curso cultural",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": \"{{usuarioId}}\",\n  \"cursoId\": \"{{cursoId}}\"\n}"
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Inscripción"
+    },
+    {
+      "name": "Multimedia",
+      "item": [
+        {
+          "name": "Material Multimedia",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/multimedia/curso/{{cursoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "multimedia",
+                "curso",
+                "{{cursoId}}"
+              ]
+            },
+            "description": "Contenido multimedia del curso"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Multimedia"
     }
   ],
   "variable": [
