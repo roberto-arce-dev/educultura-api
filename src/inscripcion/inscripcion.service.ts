@@ -1,24 +1,48 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateInscripcionDto } from './dto/create-inscripcion.dto';
 import { UpdateInscripcionDto } from './dto/update-inscripcion.dto';
 import { Inscripcion, InscripcionDocument } from './schemas/inscripcion.schema';
+import { EstudianteProfileService } from '../estudiante-profile/estudiante-profile.service';
 
 @Injectable()
 export class InscripcionService {
   constructor(
     @InjectModel(Inscripcion.name) private inscripcionModel: Model<InscripcionDocument>,
+    private estudianteProfileService: EstudianteProfileService,
   ) {}
 
-  async create(createInscripcionDto: CreateInscripcionDto): Promise<Inscripcion> {
-    const nuevoInscripcion = await this.inscripcionModel.create(createInscripcionDto);
+  async create(createInscripcionDto: CreateInscripcionDto, userId?: string): Promise<Inscripcion> {
+    let estudianteId: string;
+
+    if (createInscripcionDto.estudiante) {
+      estudianteId = createInscripcionDto.estudiante;
+    } else if (userId) {
+      const profile = await this.estudianteProfileService.findByUserId(userId);
+      estudianteId = (profile as any)._id.toString();
+    } else {
+      throw new NotFoundException('Estudiante no especificado');
+    }
+
+    const nuevoInscripcion = await this.inscripcionModel.create({
+      ...createInscripcionDto,
+      estudiante: new Types.ObjectId(estudianteId),
+    });
     return nuevoInscripcion;
   }
 
   async findAll(): Promise<Inscripcion[]> {
     const inscripcions = await this.inscripcionModel.find();
     return inscripcions;
+  }
+
+  async findMyInscripciones(userId: string): Promise<Inscripcion[]> {
+    const profile = await this.estudianteProfileService.findByUserId(userId);
+    const estudianteId = (profile as any)._id.toString();
+    return this.inscripcionModel.find({ estudiante: new Types.ObjectId(estudianteId) })
+      .populate('curso', 'titulo categoria precio')
+      .sort({ createdAt: -1 });
   }
 
   async findOne(id: string | number): Promise<Inscripcion> {

@@ -34,13 +34,23 @@ export class InscripcionController {
   @ApiResponse({ status: 201, description: 'Inscripcion creado exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
   @ApiResponse({ status: 401, description: 'No autorizado' })
-  async create(@Body() createInscripcionDto: CreateInscripcionDto) {
-    const data = await this.inscripcionService.create(createInscripcionDto);
+  async create(@Body() createInscripcionDto: CreateInscripcionDto, @Req() req: any) {
+    const userId = req.user?.userId;
+    const data = await this.inscripcionService.create(createInscripcionDto, userId);
     return {
       success: true,
       message: 'Inscripcion creado exitosamente',
       data,
     };
+  }
+
+  @Get('mis-inscripciones')
+  @ApiOperation({ summary: 'Obtener inscripciones del usuario autenticado' })
+  @ApiResponse({ status: 200, description: 'Lista de inscripciones del usuario' })
+  async findMyInscripciones(@Req() req: any) {
+    const userId = req.user.userId;
+    const data = await this.inscripcionService.findMyInscripciones(userId);
+    return { success: true, data, total: data.length };
   }
 
   @Post(':id/upload-image')

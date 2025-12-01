@@ -102,6 +102,15 @@ export class MaterialMultimediaController {
     return { success: true, data, total: data.length };
   }
 
+  @Get('curso/:cursoId')
+  @ApiOperation({ summary: 'Listar materiales por curso' })
+  @ApiParam({ name: 'cursoId', description: 'ID del curso' })
+  @ApiResponse({ status: 200, description: 'Lista de materiales del curso' })
+  async findByCurso(@Param('cursoId') cursoId: string) {
+    const data = await this.materialmultimediaService.findByCurso(cursoId);
+    return { success: true, data, total: data.length };
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener MaterialMultimedia por ID' })
   @ApiParam({ name: 'id', description: 'ID del MaterialMultimedia' })
